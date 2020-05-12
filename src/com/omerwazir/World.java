@@ -1,9 +1,12 @@
 package com.omerwazir;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class World {
-    private Tile[][] tiles;
+    private final List<Creature> creatureList = new ArrayList<>();
+    private final Tile[][] tiles;
     private final int width;
     private final int height;
 
@@ -19,6 +22,13 @@ public class World {
         this.tiles = tiles;
         this.width = tiles.length;
         this.height = tiles[0].length;
+    }
+
+    public Creature getCreatureAt(int x, int y){
+        for (Creature creature : creatureList) {
+            if (creature.getX() == x && creature.getY() == y) return creature;
+        }
+        return null;
     }
 
     public Tile tile(int x, int y){
@@ -48,9 +58,10 @@ public class World {
         do {
             x = (int)(Math.random() * width);
             y = (int)(Math.random() * height);
-        } while (!tile(x,y).isGround());
+        } while (!tile(x,y).isGround() || getCreatureAt(x,y) != null);
 
         creature.setX(x);
         creature.setY(y);
+        creatureList.add(creature);
     }
 }

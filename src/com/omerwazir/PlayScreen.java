@@ -31,13 +31,30 @@ public class PlayScreen implements Screen {
         return Math.max(0, Math.min(player.getY() - screenHeight / 2, world.getHeight() - screenHeight));
     }
 
+    /*
+        TODO Fix displaying creatures on map
+
+        http://trystans.blogspot.com/2011/09/roguelike-tutorial-05-stationary.html
+        This is actually a very inefficient way to do this.
+        It would be far better to draw all the tiles and then, for each creature,
+        draw it if it is in the viewable region of left to left+screenWidth and top to top+screenHeight.
+        That way we loop through screenWidth * screenHeight tiles + the number of creatures.
+     */
     public void displayTiles(AsciiPanel terminal, int left, int top){
         for (int x = 0; x < screenWidth; x++){
-            for (int y = 0; y < screenHeight; y++){
+            for (int y = 0; y < screenHeight; y++) {
                 int wx = x + left;
                 int wy = y + top;
 
-                terminal.write(world.getGlyph(wx, wy), x, y, world.getColor(wx,wy));
+                Creature creature = world.getCreatureAt(wx, wy);
+                if (creature != null) {
+                    terminal.write(creature.getGlyph(),
+                            creature.getX() - left,
+                            creature.getY() - top,
+                                creature.getColor());
+                } else {
+                    terminal.write(world.getGlyph(wx, wy), x, y, world.getColor(wx, wy));
+            }
             }
         }
     }
@@ -47,7 +64,10 @@ public class PlayScreen implements Screen {
         int left = getScrollX();
         int top = getScrollY();
         displayTiles(terminal, left, top);
-        terminal.write(player.getGlyph(), player.getX() - left, player.getY() - top, player.getColor());
+        terminal.write(player.getGlyph(),
+                player.getX() - left,
+                player.getY() - top,
+                player.getColor());
     }
 
     @Override
