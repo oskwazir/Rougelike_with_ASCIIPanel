@@ -106,6 +106,8 @@ public class Creature {
         damage = (int)(Math.random() * damage) + 1;
 
         opponent.receiveDamage(damage);
+        this.notify("You attack the '%s' for %d damage.", opponent.glyph, damage);
+        opponent.notify("The '%s' attacks you for %d damage.",this.glyph, damage);
     }
 
     public void receiveDamage(int amount) {
@@ -114,5 +116,7 @@ public class Creature {
         if (this.healthPoints < 1) world.remove(this);
     }
 
-
+    public void notify(String message, Object ... params){
+        ai.onNotify(String.format(message, params));
+    }
 }

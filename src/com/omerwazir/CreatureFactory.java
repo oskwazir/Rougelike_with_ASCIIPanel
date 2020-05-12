@@ -4,6 +4,8 @@ import asciiPanel.AsciiPanel;
 import com.omerwazir.ai.FungusAI;
 import com.omerwazir.ai.PlayerAi;
 
+import java.util.List;
+
 public class CreatureFactory {
     private World world;
 
@@ -23,7 +25,7 @@ public class CreatureFactory {
         return fungus;
     }
 
-    public Creature newPlayer(){
+    public Creature newPlayer(List<String> messages){
         Creature player = new Creature(world,
                 '@',
                 AsciiPanel.brightWhite,
@@ -31,7 +33,7 @@ public class CreatureFactory {
                 20,
                 5);
         world.addAtEmptyLocation(player);
-        new PlayerAi(player);
+        new PlayerAi(player, messages);
         return player;
     }
 }
