@@ -13,4 +13,7 @@ public class CreatureAi {
 
     public void onEnter(int i, int i1, Tile tile) {
     }
+
+    public void onUpdate() {
+    }
 }

@@ -2,6 +2,7 @@ package com.omerwazir;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class World {
@@ -67,5 +68,12 @@ public class World {
 
     public void remove(Creature other) {
         creatureList.remove(other);
+    }
+
+    public void update(){
+        List<Creature> immutableCreatureList = List.copyOf(creatureList);
+        for (Creature creature: immutableCreatureList) {
+            creature.update();
+        }
     }
 }

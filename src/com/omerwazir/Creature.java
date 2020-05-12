@@ -66,4 +66,11 @@ public class Creature {
         world.remove(other);
     }
 
+    public void update() {
+        ai.onUpdate();
+    }
+
+    public boolean canEnter(int x, int y) {
+        return world.getCreatureAt(x, y) == null;
+    }
 }
