@@ -72,11 +72,14 @@ public class PlayScreen implements Screen {
     public void displayOutput(AsciiPanel terminal) {
         int left = getScrollX();
         int top = getScrollY();
+        String stats = String.format(" %3d/%3d hp", player.getHealthPoints(), player.getMaxHealthPoints());
         displayTiles(terminal, left, top);
         terminal.write(player.getGlyph(),
                 player.getCurrentX() - left,
                 player.getCurrentY() - top,
                 player.getColor());
+        terminal.write(stats, 1, 23);
+
     }
 
     @Override
