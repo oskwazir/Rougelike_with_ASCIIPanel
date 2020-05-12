@@ -33,11 +33,11 @@ public class PlayScreen implements Screen {
     }
 
     public int getScrollX(){
-        return Math.max(0, Math.min(player.getX() - screenWidth / 2, world.getWidth() - screenWidth));
+        return Math.max(0, Math.min(player.getCurrentX() - screenWidth / 2, world.getWidth() - screenWidth));
     }
 
     public int getScrollY(){
-        return Math.max(0, Math.min(player.getY() - screenHeight / 2, world.getHeight() - screenHeight));
+        return Math.max(0, Math.min(player.getCurrentY() - screenHeight / 2, world.getHeight() - screenHeight));
     }
 
     /*
@@ -58,8 +58,8 @@ public class PlayScreen implements Screen {
                 Creature creature = world.getCreatureAt(wx, wy);
                 if (creature != null) {
                     terminal.write(creature.getGlyph(),
-                            creature.getX() - left,
-                            creature.getY() - top,
+                            creature.getCurrentX() - left,
+                            creature.getCurrentY() - top,
                                 creature.getColor());
                 } else {
                     terminal.write(world.getGlyph(wx, wy), x, y, world.getColor(wx, wy));
@@ -74,8 +74,8 @@ public class PlayScreen implements Screen {
         int top = getScrollY();
         displayTiles(terminal, left, top);
         terminal.write(player.getGlyph(),
-                player.getX() - left,
-                player.getY() - top,
+                player.getCurrentX() - left,
+                player.getCurrentY() - top,
                 player.getColor());
     }
 

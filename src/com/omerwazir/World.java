@@ -26,7 +26,7 @@ public class World {
 
     public Creature getCreatureAt(int x, int y){
         for (Creature creature : creatureList) {
-            if (creature.getX() == x && creature.getY() == y) return creature;
+            if (creature.getCurrentX() == x && creature.getCurrentY() == y) return creature;
         }
         return null;
     }
@@ -60,8 +60,12 @@ public class World {
             y = (int)(Math.random() * height);
         } while (!tile(x,y).isGround() || getCreatureAt(x,y) != null);
 
-        creature.setX(x);
-        creature.setY(y);
+        creature.setCurrentX(x);
+        creature.setCurrentY(y);
         creatureList.add(creature);
+    }
+
+    public void remove(Creature other) {
+        creatureList.remove(other);
     }
 }

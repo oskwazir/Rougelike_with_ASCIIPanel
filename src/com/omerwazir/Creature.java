@@ -9,23 +9,23 @@ public class Creature {
     private CreatureAi ai;
     private final char glyph;
     private final Color color;
-    private int x;
-    private int y;
+    private int currentX;
+    private int currentY;
 
-    public int getX() {
-        return x;
+    public int getCurrentX() {
+        return currentX;
     }
 
-    public int getY() {
-        return y;
+    public int getCurrentY() {
+        return currentY;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public void setCurrentX(int newX) {
+        this.currentX = newX;
     }
 
-    public void setY(int y) {
-        this.y = y;
+    public void setCurrentY(int newY) {
+        this.currentY = newY;
     }
 
     public Creature(World world, char glyph, Color color){
@@ -50,8 +50,20 @@ public class Creature {
         world.dig(wx, wy);
     }
 
-    public void moveBy(int mx, int my) {
-        ai.onEnter(x+mx, y+my, world.tile(x+mx, y+my));
+    public void moveBy(int moveX, int moveY) {
+        Creature other = world.getCreatureAt(currentX + moveX, currentY + moveY);
+        if(other == null) {
+            ai.onEnter(currentX + moveX,
+                    currentY + moveY,
+                    world.tile(currentX +moveX, currentY +moveY));
+        } else {
+            attack(other);
+        }
+
+    }
+
+    private void attack(Creature other) {
+        world.remove(other);
     }
 
 }
