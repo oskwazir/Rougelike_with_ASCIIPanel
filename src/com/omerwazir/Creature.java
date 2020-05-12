@@ -5,7 +5,7 @@ import com.omerwazir.ai.CreatureAi;
 import java.awt.*;
 
 public class Creature {
-    private World world;
+    private final World world;
     private CreatureAi ai;
     private final char glyph;
     private final Color color;
@@ -106,6 +106,7 @@ public class Creature {
         damage = (int)(Math.random() * damage) + 1;
 
         opponent.receiveDamage(damage);
+        this.doAction("attack the '%s' for %d damage", opponent.glyph, damage);
         this.notify("You attack the '%s' for %d damage.", opponent.glyph, damage);
         opponent.notify("The '%s' attacks you for %d damage.",this.glyph, damage);
     }
@@ -113,10 +114,46 @@ public class Creature {
     public void receiveDamage(int amount) {
         this.healthPoints -= amount;
 
-        if (this.healthPoints < 1) world.remove(this);
+        if (this.healthPoints < 1){
+            doAction("die");
+            world.remove(this);
+        }
     }
 
     public void notify(String message, Object ... params){
         ai.onNotify(String.format(message, params));
+    }
+
+    public void doAction(String message, Object ... params){
+        int r = 9;
+        for (int ox = -r; ox < r+1; ox++){
+            for (int oy = -r; oy < r+1; oy++){
+                if (ox*ox + oy*oy > r*r)
+                    continue;
+
+                Creature other = world.getCreatureAt(currentX+ox, currentY+oy);
+
+                if (other == null)
+                    continue;
+
+                if (other == this)
+                    other.notify("You " + message + ".", params);
+                else
+                    other.notify(String.format("The '%s' %s.", glyph, makeSecondPerson(message)), params);
+            }
+        }
+    }
+
+    private Object makeSecondPerson(String text) {
+        String[] words = text.split(" ");
+        words[0] = words[0] + "s";
+
+        StringBuilder builder = new StringBuilder();
+        for (String word : words){
+            builder.append(" ");
+            builder.append(word);
+        }
+
+        return builder.toString().trim();
     }
 }

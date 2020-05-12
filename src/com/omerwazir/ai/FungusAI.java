@@ -20,15 +20,17 @@ public class FungusAI extends CreatureAi{
     }
 
     private void spread() {
-        int x = creature.getCurrentX() + (int)(Math.random() * 11) - MAX_SPREAD_COUNT;
-        int y = creature.getCurrentY() + (int)(Math.random() * 11) - MAX_SPREAD_COUNT;
+        int x = this.creature.getCurrentX() + (int)(Math.random() * 11) - MAX_SPREAD_COUNT;
+        int y = this.creature.getCurrentY() + (int)(Math.random() * 11) - MAX_SPREAD_COUNT;
 
-        if(!creature.canEnter(x,y)) return;
+        if(!this.creature.canEnter(x,y)) return;
 
         Creature child = creatureFactory.newFungus();
+        this.creature.doAction("spawn a child");
         child.setCurrentX(x);
         child.setCurrentY(y);
         spreadCount++;
+
 
     }
 
