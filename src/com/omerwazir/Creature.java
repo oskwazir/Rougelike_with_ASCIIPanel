@@ -1,5 +1,7 @@
 package com.omerwazir;
 
+import com.omerwazir.ai.CreatureAi;
+
 import java.awt.*;
 
 public class Creature {

@@ -1,4 +1,8 @@
-package com.omerwazir;
+package com.omerwazir.ai;
+
+import com.omerwazir.Creature;
+import com.omerwazir.Tile;
+import com.omerwazir.ai.CreatureAi;
 
 public class PlayerAi extends CreatureAi {
     public PlayerAi(Creature creature) {

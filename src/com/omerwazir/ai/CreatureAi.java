@@ -1,4 +1,7 @@
-package com.omerwazir;
+package com.omerwazir.ai;
+
+import com.omerwazir.Creature;
+import com.omerwazir.Tile;
 
 public class CreatureAi {
     protected Creature creature;

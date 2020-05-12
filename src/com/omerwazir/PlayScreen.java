@@ -6,17 +6,26 @@ import java.awt.event.KeyEvent;
 
 public class PlayScreen implements Screen {
 
+    private static final int MAX_CREATURES = 8;
     private World world;
     private final int screenWidth;
     private final int screenHeight;
-    private final Creature player;
+    private Creature player;
 
     public PlayScreen(){
         screenWidth = 80;
         screenHeight = 21;
         createWorld();
         CreatureFactory creatureFactory = new CreatureFactory(world);
+        createCreatures(creatureFactory);
+    }
+
+    private void createCreatures(CreatureFactory creatureFactory) {
         player = creatureFactory.newPlayer();
+
+        for(int i = 0; i < MAX_CREATURES; i++){
+            creatureFactory.newFungus();
+        }
     }
 
     private void createWorld(){
