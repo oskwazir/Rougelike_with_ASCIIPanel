@@ -11,6 +11,10 @@ public class Creature {
     private final Color color;
     private int currentX;
     private int currentY;
+    private int healthPoints;
+    private final int maxHealthPoints;
+    private final int attackPower;
+    private final int defensivePower;
 
     public int getCurrentX() {
         return currentX;
@@ -28,10 +32,36 @@ public class Creature {
         this.currentY = newY;
     }
 
-    public Creature(World world, char glyph, Color color){
+    public int getHealthPoints() {
+        return healthPoints;
+    }
+
+    public int getMaxHealthPoints() {
+        return maxHealthPoints;
+    }
+
+    public int getAttackValue() {
+        return attackPower;
+    }
+
+    public int getDefenseValue() {
+        return defensivePower;
+    }
+
+
+    public Creature(World world,
+                    char glyph,
+                    Color color,
+                    int maxHealthPoints,
+                    int attackPower,
+                    int defensivePower){
         this.world = world;
         this.glyph = glyph;
         this.color = color;
+        this.maxHealthPoints = maxHealthPoints;
+        this.healthPoints = maxHealthPoints;
+        this.attackPower = attackPower;
+        this.defensivePower = defensivePower;
     }
 
     public char getGlyph() {
@@ -62,10 +92,6 @@ public class Creature {
 
     }
 
-    private void attack(Creature other) {
-        world.remove(other);
-    }
-
     public void update() {
         ai.onUpdate();
     }
@@ -73,4 +99,20 @@ public class Creature {
     public boolean canEnter(int x, int y) {
         return world.getCreatureAt(x, y) == null;
     }
+
+    public void attack(Creature opponent) {
+        int damage = Math.max(0, this.attackPower - opponent.getDefenseValue());
+
+        damage = (int)(Math.random() * damage) + 1;
+
+        opponent.receiveDamage(damage);
+    }
+
+    public void receiveDamage(int amount) {
+        this.healthPoints -= amount;
+
+        if (this.healthPoints < 1) world.remove(this);
+    }
+
+
 }
