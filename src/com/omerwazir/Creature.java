@@ -11,6 +11,7 @@ public class Creature {
     private final Color color;
     private int currentX;
     private int currentY;
+    private int currentZ;
     private int healthPoints;
     private final int maxHealthPoints;
     private final int attackPower;
@@ -32,16 +33,16 @@ public class Creature {
         this.currentY = newY;
     }
 
+    public int getCurrentZ() { return this.currentZ; }
+
+    public void setCurrentZ(int newZ) { this.currentZ = newZ; }
+
     public int getHealthPoints() {
         return healthPoints;
     }
 
     public int getMaxHealthPoints() {
         return maxHealthPoints;
-    }
-
-    public int getAttackValue() {
-        return attackPower;
     }
 
     public int getDefenseValue() {
@@ -76,16 +77,34 @@ public class Creature {
         this.ai = ai;
     }
 
-    public void dig(int wx, int wy) {
-        world.dig(wx, wy);
+    public void dig(int wx, int wy, int wz) {
+        world.dig(wx, wy, wz);
     }
 
-    public void moveBy(int moveX, int moveY) {
-        Creature other = world.getCreatureAt(currentX + moveX, currentY + moveY);
+    public void moveBy(int moveX, int moveY, int moveZ) {
+        Tile tile = world.tile(currentX +moveX, currentY +moveY, currentZ +moveZ);
+
+        if(moveZ == -1){
+            if (tile == Tile.STAIRS_DOWN) {
+                doAction("walk up the stairs to level %d", currentZ+moveZ+1);
+            } else {
+                doAction("try to go up but are stopped by the cave ceiling");
+
+            }
+        } else if (moveZ == 1) {
+            if (tile == Tile.STAIRS_UP) {
+                doAction("walk down the stairs to level %d", currentZ+moveZ+1);
+
+            } else {
+                doAction("try to go down but are stopped by the cave floor");
+                return;
+            }
+        }
+
+
+        Creature other = world.getCreatureAt(currentX + moveX, currentY + moveY, currentZ+moveZ);
         if(other == null) {
-            ai.onEnter(currentX + moveX,
-                    currentY + moveY,
-                    world.tile(currentX +moveX, currentY +moveY));
+            ai.onEnter(currentX + moveX, currentY + moveY, currentZ+moveZ, tile);
         } else {
             attack(other);
         }
@@ -96,8 +115,8 @@ public class Creature {
         ai.onUpdate();
     }
 
-    public boolean canEnter(int x, int y) {
-        return world.getCreatureAt(x, y) == null;
+    public boolean canEnter(int x, int y, int z) {
+        return world.tile(x,y,z).isGround() && world.getCreatureAt(x, y, z) == null;
     }
 
     public void attack(Creature opponent) {
@@ -131,7 +150,7 @@ public class Creature {
                 if (ox*ox + oy*oy > r*r)
                     continue;
 
-                Creature other = world.getCreatureAt(currentX+ox, currentY+oy);
+                Creature other = world.getCreatureAt(currentX+ox, currentY+oy, currentZ);
 
                 if (other == null)
                     continue;

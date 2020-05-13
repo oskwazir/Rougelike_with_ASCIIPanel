@@ -27,8 +27,10 @@ public class PlayScreen implements Screen {
     private void createCreatures(CreatureFactory creatureFactory) {
         player = creatureFactory.newPlayer(messages);
 
-        for (int i = 0; i < MAX_CREATURES; i++) {
-            creatureFactory.newFungus();
+        for(int z = 0; z < world.getDepth(); z++){
+            for (int i = 0; i < MAX_CREATURES; i++) {
+                creatureFactory.newFungus(z);
+            }
         }
     }
 
@@ -41,7 +43,7 @@ public class PlayScreen implements Screen {
     }
 
     private void createWorld() {
-        world = new WorldBuilder(90, 31).makeCaves().build();
+        world = new WorldBuilder(90, 32, 5).makeCaves().build();
     }
 
     public int getScrollX() {
@@ -67,14 +69,14 @@ public class PlayScreen implements Screen {
                 int wx = x + left;
                 int wy = y + top;
 
-                Creature creature = world.getCreatureAt(wx, wy);
+                Creature creature = world.getCreatureAt(wx, wy, player.getCurrentZ());
                 if (creature != null) {
                     terminal.write(creature.getGlyph(),
                             creature.getCurrentX() - left,
                             creature.getCurrentY() - top,
                             creature.getColor());
                 } else {
-                    terminal.write(world.getGlyph(wx, wy), x, y, world.getColor(wx, wy));
+                    terminal.write(world.getGlyph(wx, wy, player.getCurrentZ()), x, y, world.getColor(wx, wy, player.getCurrentZ()));
                 }
             }
         }
@@ -97,34 +99,19 @@ public class PlayScreen implements Screen {
     @Override
     public Screen respondToUserInput(KeyEvent key) {
         switch (key.getKeyCode()) {
-            case KeyEvent.VK_LEFT:
-            case KeyEvent.VK_H:
-                player.moveBy(-1, 0);
-                break;
-            case KeyEvent.VK_RIGHT:
-            case KeyEvent.VK_L:
-                player.moveBy(1, 0);
-                break;
-            case KeyEvent.VK_UP:
-            case KeyEvent.VK_K:
-                player.moveBy(0, -1);
-                break;
-            case KeyEvent.VK_DOWN:
-            case KeyEvent.VK_J:
-                player.moveBy(0, 1);
-                break;
-            case KeyEvent.VK_Y:
-                player.moveBy(-1, -1);
-                break;
-            case KeyEvent.VK_U:
-                player.moveBy(1, -1);
-                break;
-            case KeyEvent.VK_B:
-                player.moveBy(-1, 1);
-                break;
-            case KeyEvent.VK_N:
-                player.moveBy(1, 1);
-                break;
+            case KeyEvent.VK_LEFT, KeyEvent.VK_H -> player.moveBy(-1, 0, 0);
+            case KeyEvent.VK_RIGHT, KeyEvent.VK_L -> player.moveBy(1, 0, 0);
+            case KeyEvent.VK_UP, KeyEvent.VK_K -> player.moveBy(0, -1, 0);
+            case KeyEvent.VK_DOWN, KeyEvent.VK_J -> player.moveBy(0, 1, 0);
+            case KeyEvent.VK_Y -> player.moveBy(-1, -1, 0);
+            case KeyEvent.VK_U -> player.moveBy(1, -1, 0);
+            case KeyEvent.VK_B -> player.moveBy(-1, 1, 0);
+            case KeyEvent.VK_N -> player.moveBy(1, 1, 0);
+        }
+
+        switch (key.getKeyChar()) {
+            case '<' -> player.moveBy(0, 0, -1);
+            case '>' -> player.moveBy(0, 0, 1);
         }
         world.update();
         return this;

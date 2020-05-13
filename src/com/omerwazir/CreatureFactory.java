@@ -13,14 +13,14 @@ public class CreatureFactory {
         this.world = world;
     }
 
-    public Creature newFungus() {
+    public Creature newFungus(int depth) {
         Creature fungus = new Creature(world,
                 'f',
                 AsciiPanel.green,
                 10,
                 0,
                 0);
-        world.addAtEmptyLocation(fungus);
+        world.addAtEmptyLocation(fungus, depth);
         new FungusAI(fungus, this);
         return fungus;
     }
@@ -32,7 +32,7 @@ public class CreatureFactory {
                 100,
                 20,
                 5);
-        world.addAtEmptyLocation(player);
+        world.addAtEmptyLocation(player, 0);
         new PlayerAi(player, messages);
         return player;
     }

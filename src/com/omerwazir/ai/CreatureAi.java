@@ -11,7 +11,7 @@ public class CreatureAi {
         this.creature.setCreatureAi(this);
     }
 
-    public void onEnter(int i, int i1, Tile tile) {
+    public void onEnter(int x, int y, int z, Tile tile) {
     }
 
     public void onUpdate() {
